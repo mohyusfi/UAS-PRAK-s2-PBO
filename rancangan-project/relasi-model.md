@@ -22,7 +22,6 @@ classDiagram
         +string kodeStaff
         +tambahPaket()
         +updatePaket()
-        +softDeletePaket()
         +lihatCustomer()
         +updateStatusPesanan()
     }
@@ -35,8 +34,6 @@ classDiagram
         +string deskripsi
         +boolean isActive
         +Date deletedAt
-        +aktifkanPaket()
-        +nonaktifkanPaket()
     }
 
     class Pesanan {
