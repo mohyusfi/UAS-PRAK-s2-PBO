@@ -6,8 +6,20 @@
 #include "../model/MetodeLayanan.h"
 #include "../model/Pesanan.h"
 
+class ILaundryService {
+public:
+    virtual ~ILaundryService() = default;
+    virtual void tampilkanPaket() = 0;
+    virtual void tampilkanMetode() = 0;
+    virtual Pesanan* buatPesananBaru(int customerId, int idAntar, int idAmbil) = 0;
+    virtual void tambahDetailPesanan(int pesananId, int paketId, double berat, std::string catatan) = 0;
+    virtual double hitungTotal(int pesananId) = 0;
+    virtual bool updateStatusPesanan(std::string kode, std::string statusBaru) = 0;
+    virtual std::vector<Pesanan> getPesananCustomer(int customerId) = 0;
+    virtual const std::vector<Pesanan>& getListPesanan() const = 0;
+};
 
-class LaundryService {
+class LaundryService : public ILaundryService {
 private:
     std::vector<PaketLaundry> listPaket;
     std::vector<Pengantaran> listPengantaran;
@@ -28,7 +40,7 @@ public:
         listPengambilan.push_back(Pengambilan(2, "Antar ke Rumah", 5000));
     }
 
-    void tampilkanPaket() {
+    void tampilkanPaket() override {
         std::cout << "\n=== DAFTAR PAKET LAUNDRY ===" << std::endl;
         std::cout << std::left << std::setw(5) << "ID" << std::setw(20) << "Nama" << std::setw(15) << "Harga/Kg" << "Estimasi" << std::endl;
         for (const auto& p : listPaket) {
@@ -41,7 +53,7 @@ public:
         }
     }
 
-    void tampilkanMetode() {
+    void tampilkanMetode() override {
         std::cout << "\n--- Metode Pengantaran (Ke Laundry) ---" << std::endl;
         for (const auto& m : listPengantaran) {
             std::cout << m.getId() << ". " << m.getMetode() << " (Fee: " << m.getFee() << ")" << std::endl;
@@ -52,7 +64,7 @@ public:
         }
     }
 
-    Pesanan* buatPesananBaru(int customerId, int idAntar, int idAmbil) {
+    Pesanan* buatPesananBaru(int customerId, int idAntar, int idAmbil) override {
         int newId = listPesanan.size() + 1;
         std::string kode = "ORD-" + std::to_string(1000 + newId);
         
@@ -60,7 +72,7 @@ public:
         return &listPesanan.back();
     }
 
-    void tambahDetailPesanan(int pesananId, int paketId, double berat, std::string catatan) {
+    void tambahDetailPesanan(int pesananId, int paketId, double berat, std::string catatan) override {
         double hargaPaket = 0;
         for (const auto& p : listPaket) {
             if (p.getId() == paketId) {
@@ -73,7 +85,7 @@ public:
         listDetail.push_back(DetailPesanan(detailId, pesananId, paketId, berat, hargaPaket, catatan));
     }
 
-    double hitungTotal(int pesananId) {
+    double hitungTotal(int pesananId) override {
         double total = 0;
         Pesanan* pesanan = nullptr;
 
@@ -87,7 +99,9 @@ public:
         if (!pesanan) return 0;
 
         for (const auto& d : listDetail) {
-            total += d.getSubtotal();
+            if (d.getPesananId() == pesananId) {
+                total += d.getSubtotal();
+            }
         }
 
         for (const auto& m : listPengantaran) {
@@ -101,7 +115,7 @@ public:
         return total;
     }
 
-    bool updateStatusPesanan(std::string kode, std::string statusBaru) {
+    bool updateStatusPesanan(std::string kode, std::string statusBaru) override {
         for (auto& p : listPesanan) {
             if (p.getKodePesanan() == kode) {
                 p.setStatus(statusBaru);
@@ -112,7 +126,7 @@ public:
         return false;
     }
 
-    std::vector<Pesanan> getPesananCustomer(int customerId) {
+    std::vector<Pesanan> getPesananCustomer(int customerId) override {
         std::vector<Pesanan> result;
         for (const auto& p : listPesanan) {
             if (p.getCustomerId() == customerId) {
@@ -122,5 +136,47 @@ public:
         return result;
     }
 
-    const std::vector<Pesanan>& getListPesanan() const { return listPesanan; }
+    const std::vector<Pesanan>& getListPesanan() const override { return listPesanan; }
+    
+    Pesanan* buatPesananTambahan(int customerId, int parentId, int idAntar, int idAmbil) {
+        int newId = listPesanan.size() + 1;
+        std::string kode = "ORD-" + std::to_string(1000 + newId);
+        
+        Pesanan p(newId, kode, customerId, idAntar, idAmbil);
+        p.setParentId(parentId);
+        listPesanan.push_back(p);
+        return &listPesanan.back();
+    }
+
+    const std::vector<PaketLaundry>& getListPaket() const { return listPaket; }
+
+    void tambahPaket(std::string nama, double harga, int estimasi, std::string desc) {
+        int newId = listPaket.size() + 1;
+        listPaket.push_back(PaketLaundry(newId, nama, harga, estimasi, desc));
+        std::cout << "Berhasil: Paket " << nama << " berhasil ditambahkan!" << std::endl;
+    }
+
+    bool updatePaket(int id, std::string nama, double harga, int estimasi, std::string desc) {
+        for (auto& p : listPaket) {
+            if (p.getId() == id) {
+                bool active = p.getIsActive();
+                p = PaketLaundry(id, nama, harga, estimasi, desc);
+                p.setStatus(active);
+                std::cout << "Berhasil: Paket dengan ID " << id << " berhasil diperbarui!" << std::endl;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool softDeletePaket(int id) {
+        for (auto& p : listPaket) {
+            if (p.getId() == id) {
+                p.nonaktifkanPaket();
+                std::cout << "Berhasil: Paket " << p.getNamaPaket() << " dinonaktifkan (Soft-Delete)!" << std::endl;
+                return true;
+            }
+        }
+        return false;
+    }
 };

@@ -20,8 +20,8 @@ public:
         this->subtotal = berat * hargaPerKg;
     }
 
-    // Getter
     int getId() const { return id; }
+    int getPesananId() const { return pesananId; }
     int getPaketId() const { return paketId; }
     double getBerat() const { return berat; }
     double getSubtotal() const { return subtotal; }
@@ -50,15 +50,14 @@ public:
         tanggalPesan = std::chrono::system_clock::now();
     }
 
-
     int getId() const { return id; }
+    int getParentPesananId() const { return parentPesananId; }
     std::string getKodePesanan() const { return kodePesanan; }
     int getCustomerId() const { return customerId; }
     std::string getStatusPesanan() const { return statusPesanan; }
     double getTotalHarga() const { return totalHarga; }
     int getPengantaranId() const { return pengantaranId; }
     int getPengambilanId() const { return pengambilanId; }
-
 
     void setTotalHarga(double harga) { totalHarga = harga; }
     void setStatus(std::string status) { statusPesanan = status; }

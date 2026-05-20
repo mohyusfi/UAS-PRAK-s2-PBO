@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 
-
 class PaketLaundry {
 private:
     int id;
@@ -15,7 +14,6 @@ public:
     PaketLaundry(int id, std::string nama, double harga, int estimasi, std::string desc)
         : id(id), namaPaket(nama), hargaPerKg(harga), estimasiHari(estimasi), deskripsi(desc), isActive(true) {}
 
-
     int getId() const { return id; }
     std::string getNamaPaket() const { return namaPaket; }
     double getHargaPerKg() const { return hargaPerKg; }
@@ -23,6 +21,7 @@ public:
     std::string getDeskripsi() const { return deskripsi; }
     bool getIsActive() const { return isActive; }
 
-  
     void setStatus(bool status) { isActive = status; }
+    void aktifkanPaket() { isActive = true; }
+    void nonaktifkanPaket() { isActive = false; }
 };
