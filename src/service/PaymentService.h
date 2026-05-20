@@ -37,6 +37,8 @@ public:
             return false;
         }
 
+        double kembalian = nominal - trx->getTotalTagihan();
+
         int payId = listPembayaran.size() + 1;
         listPembayaran.push_back(Pembayaran(payId, transaksiId, metode, nominal));
         
@@ -44,6 +46,11 @@ public:
         trx->setStatus("Paid");
 
         std::cout << "Berhasil: Pembayaran diterima. Status Transaksi: PAID." << std::endl;
+        
+        if (kembalian > 0) {
+            std::cout << "Kembalian: Rp" << kembalian << std::endl;
+        }
+        
         return true;
     }
 

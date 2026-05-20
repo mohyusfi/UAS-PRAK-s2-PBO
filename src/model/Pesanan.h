@@ -34,8 +34,8 @@ private:
     int id;
     std::string kodePesanan;
     int customerId;
-    int parentPesananId; // Untuk pesanan tambahan (optional)
-    std::string statusPesanan; // Contoh: "Pending", "Proses", "Selesai"
+    int parentPesananId; 
+    std::string statusPesanan; 
     double totalHarga;
     std::chrono::system_clock::time_point tanggalPesan;
     
