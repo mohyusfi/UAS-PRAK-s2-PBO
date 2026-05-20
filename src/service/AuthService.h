@@ -31,7 +31,6 @@ public:
     }
 
     bool login(std::string email, std::string password) {
-        // Cari di list Staff
         for (auto& s : listStaff) {
             if (s.getEmail() == email && s.getPassword() == password) {
                 currentUser = &s;
