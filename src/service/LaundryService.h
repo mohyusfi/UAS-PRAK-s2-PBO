@@ -137,16 +137,7 @@ public:
     }
 
     const std::vector<Pesanan>& getListPesanan() const override { return listPesanan; }
-    
-    Pesanan* buatPesananTambahan(int customerId, int parentId, int idAntar, int idAmbil) {
-        int newId = listPesanan.size() + 1;
-        std::string kode = "ORD-" + std::to_string(1000 + newId);
-        
-        Pesanan p(newId, kode, customerId, idAntar, idAmbil);
-        p.setParentId(parentId);
-        listPesanan.push_back(p);
-        return &listPesanan.back();
-    }
+
 
     const std::vector<PaketLaundry>& getListPaket() const { return listPaket; }
 
@@ -173,7 +164,7 @@ public:
         for (auto& p : listPaket) {
             if (p.getId() == id) {
                 p.nonaktifkanPaket();
-                std::cout << "Berhasil: Paket " << p.getNamaPaket() << " dinonaktifkan (Soft-Delete)!" << std::endl;
+                std::cout << "Berhasil: Paket " << p.getNamaPaket() << " dinonaktifkan!" << std::endl;
                 return true;
             }
         }
