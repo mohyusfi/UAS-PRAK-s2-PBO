@@ -170,4 +170,28 @@ public:
         }
         return false;
     }
+
+    bool aktifkanPaket(int id) {
+        for (auto& p : listPaket) {
+            if (p.getId() == id) {
+                p.aktifkanPaket();
+                std::cout << "Berhasil: Paket " << p.getNamaPaket() << " diaktifkan kembali!" << std::endl;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void tampilkanSemuaPaketSistem() {
+        std::cout << "\n=== DAFTAR SEMUA PAKET LAUNDRY (STAFF) ===" << std::endl;
+        std::cout << std::left << std::setw(5) << "ID" << std::setw(20) << "Nama" << std::setw(15) << "Harga/Kg" << std::setw(15) << "Estimasi" << "Status" << std::endl;
+        for (const auto& p : listPaket) {
+            std::string statusStr = p.getIsActive() ? "Aktif" : "Nonaktif";
+            std::cout << std::left << std::setw(5) << p.getId() 
+                      << std::setw(20) << p.getNamaPaket() 
+                      << std::setw(15) << p.getHargaPerKg() 
+                      << std::setw(15) << (std::to_string(p.getEstimasiHari()) + " Hari")
+                      << statusStr << std::endl;
+        }
+    }
 };

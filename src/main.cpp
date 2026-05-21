@@ -94,7 +94,10 @@ void menuStaff() {
         cout << "\n=== MENU STAFF (" << user->getNama() << ") ===" << endl;
         cout << "1. Lihat Semua Pesanan" << endl;
         cout << "2. Update Status Pesanan" << endl;
-        cout << "3. Logout" << endl;
+        cout << "3. Tambah Paket Laundry" << endl;
+        cout << "4. Nonaktifkan Paket Laundry" << endl;
+        cout << "5. Aktifkan Paket Laundry" << endl;
+        cout << "6. Logout" << endl;
         cout << "Pilih: ";
         cin >> pilihan;
 
@@ -115,6 +118,32 @@ void menuStaff() {
                 cout << "Gagal: Kode pesanan tidak ditemukan!" << endl;
             }
         } else if (pilihan == 3) {
+            string nama, desc;
+            double harga;
+            int estimasi;
+
+            cout << "\n=== TAMBAH PAKET LAUNDRY BARU ===" << endl;
+            cout << "Nama Paket: "; clearInput(); getline(cin, nama);
+            cout << "Harga per Kg: "; cin >> harga;
+            cout << "Estimasi Waktu (Hari): "; cin >> estimasi;
+            cout << "Deskripsi Paket: "; clearInput(); getline(cin, desc);
+
+            laundry.tambahPaket(nama, harga, estimasi, desc);
+        } else if (pilihan == 4) {
+            int id;
+            laundry.tampilkanSemuaPaketSistem();
+            cout << "\nMasukkan ID Paket yang ingin dinonaktifkan: "; cin >> id;
+            if (!laundry.softDeletePaket(id)) {
+                cout << "Gagal: ID paket tidak ditemukan!" << endl;
+            }
+        } else if (pilihan == 5) {
+            int id;
+            laundry.tampilkanSemuaPaketSistem();
+            cout << "\nMasukkan ID Paket yang ingin diaktifkan kembali: "; cin >> id;
+            if (!laundry.aktifkanPaket(id)) {
+                cout << "Gagal: ID paket tidak ditemukan!" << endl;
+            }
+        } else if (pilihan == 6) {
             auth.logout();
             break;
         }
